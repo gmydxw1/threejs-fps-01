@@ -204,7 +204,21 @@ export function createBots(scene, colliders) {
       const attacking = ctx.attackingTeam === bot.team;
       const bombPlanted = ctx.bombPlanted;
 
-      if (bot.target && bot.lastSeen) {
+      // Objective over gunfight: an attacker standing on the site plants the
+      // bomb, a defender standing on a planted site defuses it — instead of
+      // trading shots. Without this the plant is unreachable in organic play
+      // (0 plants in 6 observed rounds, round 2): a live defender always
+      // keeps the attackers in 'engage', and the round ends the instant the
+      // last defender dies, so the quiet moment the old code waited for
+      // never comes. The planter crouches and stands still while the team
+      // covers them; the plant still fails if they are shot first.
+      if (!bombPlanted && attacking && ctx.inSite(bot.body.position)) {
+        bot.state = 'plant';
+        moveBody(bot.body, dt, { fwd: 0, strafe: 0, jump: false, crouch: true }, colliders);
+      } else if (bombPlanted && !attacking && ctx.inSite(bot.body.position)) {
+        bot.state = 'defuse';
+        moveBody(bot.body, dt, { fwd: 0, strafe: 0, jump: false, crouch: true }, colliders);
+      } else if (bot.target && bot.lastSeen) {
         bot.state = 'engage';
         const aim = bot.lastSeen;
         const distToTarget = bot.body.position.distanceTo(aim);
