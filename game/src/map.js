@@ -188,10 +188,19 @@ export function createMap(scene) {
       attack: [[-4, 14], [-1.5, 14.5], [1.5, 14.5], [4, 14]],
       defend: [[-5, -13], [-1.5, -14], [1.5, -14], [5, -13]],
     },
+    // Routes: every waypoint stands on open ground and every leg clears the
+    // boxes between its ends — the round-1 routes did not. Two waypoints sat
+    // inside colliders (west/east (±14,2) inside the lane containers,
+    // mid (-1.75,-6) inside a crate, west/east (±9,-10) inside the site
+    // stacks), so flank attackers stalled on a container face and never
+    // reached the Relay; only the mid attacker ever got close. The flank
+    // routes now cut east/west across mid at z=0 (south of the olive
+    // containers, clear of the gantry legs) and join the mid tail through
+    // the central gap, so all three lanes actually arrive at the site.
     routes: {
-      west: [[-5, 13], [-12, 13], [-14, 8], [-14, 2], [-14, -6], [-9, -10], [-3, -11.5]],
-      east: [[5, 13], [13, 9], [14, 2], [14, -6], [9, -10], [3, -11.5]],
-      mid: [[0, 13], [0, 6], [1.75, 2], [1.75, -4], [-1.75, -6], [0, -10.5]],
+      west: [[-5, 13], [-10, 13], [-10, 8], [-10, 3], [-10, 0], [-7, -1], [-3, -4], [-4, -8], [0, -10.5]],
+      east: [[5, 13], [10, 13], [10, 8], [10, 3], [10, 0], [7, -1], [2, -5], [4, -8], [0, -10.5]],
+      mid: [[0, 13], [0, 6], [1.75, 2], [1.75, -4], [-4, -8], [0, -10.5]],
     },
     holds: [[-4, -9], [4, -9], [-11, -7], [11, -7], [-2, -13.5], [2, -13.5]],
   };
