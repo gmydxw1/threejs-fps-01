@@ -92,7 +92,12 @@ export const CFG = {
     reactionMax: 0.38,
     hearGunshot: 42,
     hearFootstep: 9,
-    seeDistance: 55,
+    // Bots see only 20 m, not the whole 28 m yard: at 55 m they spotted the
+    // enemy at spawn and bee-lined straight at them, so nobody ever walked
+    // a route, held a post or used a lane — the round-2 probe caught every
+    // bot in 'engage' within a second of deploy, 28 m apart. At 20 m the
+    // routes matter again and fights open at lane range, not spawn to spawn.
+    seeDistance: 20,
     // Bots track a target as far as they can see, but hold fire beyond this
     // range: a defender should not melt an attacker across the whole yard
     // before the fight has even started. The mid fight opens at ~15 m,
